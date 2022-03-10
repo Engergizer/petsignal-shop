@@ -1,7 +1,5 @@
 package com.bank.petsignal.shop.api.common
 
-import org.springframework.http.ResponseEntity
-
 class CommonResponse<T>(
     val data: T
 ) : BaseResponse() {
@@ -12,7 +10,7 @@ class CommonResponse<T>(
         this.totalPage = totalPage
     }
 
-    constructor(data: T, totalPage: Int, totaRecord: Int) : this(data) {
+    constructor(data: T, totalPage: Int, totalRecord: Int) : this(data) {
         this.totalPage = totalPage
         this.totalRecord = totalRecord
     }
