@@ -41,3 +41,12 @@ jwt:
   access-expiration: 600
   # 14 ?
   refresh-expiration: 1480000
+
+logging:
+  level:
+    org.hibernate.SQL: ERROR
+    org.hibernate.type: trace
+
+    # for native query
+    org.springframework.jdbc.core.JdbcTemplate: ERROR
+    org.springframework.jdbc.core.StatementCreatorUtils: TRACE

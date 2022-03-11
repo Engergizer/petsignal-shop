@@ -3,6 +3,7 @@ package com.bank.petsignal.shop.api.common.exception
 import com.bank.petsignal.shop.api.common.BaseResponse
 import com.bank.petsignal.shop.api.common.ErrorResponse
 import com.bank.petsignal.shop.api.enums.ErrorCode
+import org.springframework.dao.DataAccessException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MissingServletRequestParameterException
@@ -44,6 +45,14 @@ class CustomExceptionAdvice {
     @ExceptionHandler(CustomAuthenticationException::class)
     fun exceptionHandler(request: HttpServletRequest, e: CustomAuthenticationException): ResponseEntity<BaseResponse> {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse(e.error))
+    }
+
+    /**
+     * 401 사용자 인증 Exception
+     */
+    @ExceptionHandler(DataAccessException::class)
+    fun exceptionHandler(request: HttpServletRequest, e: DataAccessException): ResponseEntity<BaseResponse> {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR))
     }
 
 }

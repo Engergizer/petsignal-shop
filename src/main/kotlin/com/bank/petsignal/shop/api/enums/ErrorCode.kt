@@ -19,7 +19,7 @@ enum class ErrorCode(
     /**
      * 401 UNAUTHORIZED: 카카오 로그인 실패
      */
-    UNAUTHORIZED_KAKAO(HttpStatus.UNAUTHORIZED, "카카오 로그인에 실패하였습니다."),
+    UNAUTHORIZED_KAKAO(HttpStatus.UNAUTHORIZED, "카카오 유저 정보 조회 에러"),
 
     /**
      * 403 FORBIDDEN: 인증 정보 불일치 접근 제한

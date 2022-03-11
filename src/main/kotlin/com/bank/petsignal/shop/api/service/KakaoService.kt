@@ -1,5 +1,7 @@
 package com.bank.petsignal.shop.api.service
 
+import com.bank.petsignal.shop.api.common.exception.CustomException
+import com.bank.petsignal.shop.api.enums.ErrorCode
 import com.bank.petsignal.shop.api.enums.SocialType
 import com.bank.petsignal.shop.api.model.KakaoUser
 import com.bank.petsignal.shop.api.model.User
@@ -36,10 +38,11 @@ class KakaoService(
         }
     }
 
-    fun signIn(accessToken: String) : User {
+    fun signIn(accessToken: String) : User? {
         var kakoUser = getUserInfo(accessToken)
+            ?: throw CustomException(ErrorCode.UNAUTHORIZED_KAKAO)
         logger.info("kakoUser => $kakoUser")
-        return userRepository.findByProviderId("${SocialType.KAKAO.name + kakoUser!!.id}")
+        return userRepository.findByProviderIdAndSocialTypeAndEnabled(kakoUser!!.id.toString(), SocialType.KAKAO)
             ?: authService.kakaoJoin(kakoUser)
     }
 
