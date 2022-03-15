@@ -9,7 +9,7 @@ import java.sql.ResultSet
 class UserRowMapper : RowMapper<User> {
     override fun mapRow(rs: ResultSet, rowNum: Int): User {
         return User(
-            rs.getInt("id"),
+            rs.getLong("id"),
             rs.getString("shop_id"),
             rs.getString("provider_id"),
             rs.getString("email"),

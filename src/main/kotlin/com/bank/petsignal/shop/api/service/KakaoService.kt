@@ -17,9 +17,10 @@ import org.springframework.web.client.RestTemplate
 
 @Service
 class KakaoService(
-    val restTemplate: RestTemplate,
-    val userRepository: UserRepository,
-    val authService: AuthService,
+    private val restTemplate: RestTemplate,
+    private val userRepository: UserRepository,
+    private val authService: AuthService,
+    private val tokenService: TokenService,
 ) {
 
     companion object {
@@ -38,12 +39,15 @@ class KakaoService(
         }
     }
 
-    fun signIn(accessToken: String) : User? {
+    fun signIn(accessToken: String) : User {
         var kakoUser = getUserInfo(accessToken)
             ?: throw CustomException(ErrorCode.UNAUTHORIZED_KAKAO)
         logger.info("kakoUser => $kakoUser")
-        return userRepository.findByProviderIdAndSocialTypeAndEnabled(kakoUser!!.id.toString(), SocialType.KAKAO)
-            ?: authService.kakaoJoin(kakoUser)
+        var user = userRepository.findByProviderIdAndSocialTypeAndEnabled(kakoUser!!.id.toString(), SocialType.KAKAO)
+                    ?: authService.kakaoJoin(kakoUser)
+        return user.apply {
+            this.token = tokenService.getToken(this.email!!)
+        }
     }
 
     private fun getAccessToken(authCode: String) : Map<*, *>? {

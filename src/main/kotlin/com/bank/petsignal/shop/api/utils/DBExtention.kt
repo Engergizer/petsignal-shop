@@ -1,5 +1,7 @@
 package com.bank.petsignal.shop.api.utils
 
+import com.bank.petsignal.shop.api.common.exception.CustomException
+import com.bank.petsignal.shop.api.enums.ErrorCode
 import mu.KLogger
 import mu.KLogging
 import org.springframework.dao.EmptyResultDataAccessException
@@ -9,17 +11,17 @@ import org.springframework.transaction.support.DefaultTransactionDefinition
 
 private val logger: KLogger = KLogging().logger
 
-fun <T, R> T?.runDBCatch(block: () -> R?) : R? {
+fun <T, R> T.runDBCatching(block: () -> R?) : R? {
     var status: TransactionStatus? = null
     var transactionManager: PlatformTransactionManager? = null
 
-    this?.let {
+    this.let {
         when(it) {
             is PlatformTransactionManager -> {
-                transactionManager = it!! as PlatformTransactionManager
+                transactionManager = it!!
                 status = transactionManager!!.getTransaction(DefaultTransactionDefinition())
             }
-            else -> it
+            else -> throw CustomException(ErrorCode.INTERNAL_SERVER_ERROR)
         }
     }
 

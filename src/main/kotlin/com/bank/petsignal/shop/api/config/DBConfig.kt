@@ -7,17 +7,17 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.jdbc.datasource.DataSourceTransactionManager
 import org.springframework.transaction.PlatformTransactionManager
-import org.springframework.transaction.annotation.EnableTransactionManagement
+import org.springframework.transaction.TransactionManager
+import org.springframework.transaction.annotation.TransactionManagementConfigurer
 import javax.sql.DataSource
 
 @Configuration
-@EnableTransactionManagement
 class DBConfig(
     var properties: DataSourceProperties
 ) {
 //    companion object: KLogging()
 
-    @Bean
+    @Bean(name = ["dataSource"], destroyMethod = "close")
     @ConfigurationProperties(prefix="spring.datasource")
     fun dataSource() : DataSource {
 
@@ -40,8 +40,9 @@ class DBConfig(
 
     @Bean
     fun transactionManager() : PlatformTransactionManager {
-        return DataSourceTransactionManager(dataSource())
+        val dataSourceTransactionManager = DataSourceTransactionManager()
+        dataSourceTransactionManager.dataSource = dataSource()
+        return dataSourceTransactionManager
     }
-
 
 }
